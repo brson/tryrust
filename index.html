@@ -4,9 +4,24 @@
   <head>
     <meta charset="utf-8">
     <title>Try Rust!</title>
+
     <link rel="stylesheet/less" href="style.less" media="all" />
     <script src="lib/less/less-1.1.3.min.js"></script>
+
     <script src="lib/coffee-script/coffee-script.js"></script>
+
+    <script src="lib/codemirror2/codemirror.js"></script>
+    <link rel="stylesheet" href="lib/codemirror2/codemirror.css" />
+    <link rel="stylesheet" href="lib/codemirror2/theme/cobalt.css" />
+    <link rel="stylesheet" href="lib/codemirror2/theme/default.css" />
+    <link rel="stylesheet" href="lib/codemirror2/theme/eclipse.css" />
+    <link rel="stylesheet" href="lib/codemirror2/theme/elegant.css" />
+    <link rel="stylesheet" href="lib/codemirror2/theme/neat.css" />
+    <link rel="stylesheet" href="lib/codemirror2/theme/night.css" />
+
+    <script src="lib/jquery/jquery-1.6.4.min.js"></script>
+
+    <script type="text/coffeescript" src="tryrust.coffee"></script>
   </head>
 
   <body>
@@ -17,10 +32,15 @@
 
       <div class="row">
 	<div class="span8 columns console">
-	  input area
+	  <textarea id="inputarea">
+fn main() {
+    log "hello world";
+}
+	  </textarea>
 	</div>
 	<div class="span8 columns console">
-	  output area
+	  <textarea id="outputarea">
+	  </textarea>
 	</div>
       </div>
     </div>
