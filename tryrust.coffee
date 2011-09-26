@@ -1,7 +1,7 @@
 $(document).ready ->
         inputArea = document.getElementById("inputarea")
         outputArea = document.getElementById("outputarea")
-        theme = "cobalt"
+        theme = "default"
         cmInput = CodeMirror.fromTextArea(
                 inputArea,
                 {theme: theme})
