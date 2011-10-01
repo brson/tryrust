@@ -1,3 +1,10 @@
+getCode = () -> "some code"
+
+setResult = (result) ->
+
+submitCode = () ->
+        $.post("api/run", getCode())
+
 $(document).ready ->
         inputArea = document.getElementById("inputarea")
         outputArea = document.getElementById("outputarea")
@@ -8,3 +15,6 @@ $(document).ready ->
         cmOutput = CodeMirror.fromTextArea(
                 outputArea,
                 {theme: theme})
+
+        $("#submit-btn").click(submitCode)
+
