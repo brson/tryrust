@@ -1,4 +1,4 @@
 client = window.tryRustClient
 
 test "test", () ->
-  client.submitCode("test")
+  client.submitCode("test", () ->)
