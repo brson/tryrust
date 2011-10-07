@@ -16,6 +16,16 @@ handleApi = (request, response) ->
   console.log("Handling an API request")
   collect_data(request, (reqstr) ->
     console.log(reqstr)
+
+    runObj = null
+    try
+      runObj = JSON.parse(reqstr)
+    catch error
+      console.log("Unable to parse request")
+      response.writeHead(400)
+      response.end()
+      return
+
     response.writeHead(200, {'Content-Type': 'text/json'})
     response.end()
   )
