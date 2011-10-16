@@ -29,12 +29,13 @@ test "submit success", () ->
     start()
 
 test "submit with error response", () ->
-  expect(1)
+  expect(2)
   client.submitCode$ mock$, "code", (result) ->
     ok(!result.success)
+    ok(result.errmsg == "Server error")
 
 test "submit timeout", () ->
-  expect(1)
+  expect(2)
   mock =
     post: (url, data) ->
       success: () -> this
@@ -42,4 +43,5 @@ test "submit timeout", () ->
   stop()
   client.submitCodeTimeout$ mock, "code", 10, (result) ->
     ok(!result.success)
+    ok(result.errmsg == "Request timed out")
     start()

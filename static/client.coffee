@@ -14,6 +14,7 @@ submitCodeTimeout$ = ($, code, timeout, callback) ->
     timedout = true
     callback
       success: false
+      errmsg: "Request timed out"
 
   timerId = setTimeout timeoutFn, timeout
 
@@ -31,6 +32,7 @@ submitCodeTimeout$ = ($, code, timeout, callback) ->
       clearTimeout timerId
       callback({
         success: false
+        errmsg: "Server error"
       })
 
 window.tryRustClient =
