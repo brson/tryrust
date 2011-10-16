@@ -1,18 +1,39 @@
+timeout = 1000
+
 submitCode = (code, callback) -> submitCode$($, code, callback)
 
 submitCode$ = ($, code, callback) ->
+  submitCodeTimeout$ $, code, timeout, callback
+
+submitCodeTimeout$ = ($, code, timeout, callback) ->
+
+  timedout = false
+  timerId = null
+
+  timeoutFn = () ->
+    timedout = true
+    callback
+      success: false
+
+  timerId = setTimeout timeoutFn, timeout
+
   $.post("api/run", JSON.stringify({
     code: code
   }))
   .success () ->
-    callback({
-      success: true
-    })
+    if !timedout
+      clearTimeout timerId
+      callback({
+        success: true
+      })
   .error () ->
-    callback({
-      success: false
-    })
+    if !timedout
+      clearTimeout timerId
+      callback({
+        success: false
+      })
 
 window.tryRustClient =
   submitCode: submitCode
   submitCode$: submitCode$
+  submitCodeTimeout$: submitCodeTimeout$
