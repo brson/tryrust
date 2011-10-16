@@ -1,13 +1,34 @@
 client = window.tryRustClient
 
-test "submit not-json", 1, () ->
+mockjqXHR =
+  error: (callback) ->
+    callback {
+      success: false
+    }
+    mockjqXHR
+  success: (callback) ->
+    mockjqXHR
+
+mock$ =
+  post: (url, data) ->
+    mockjqXHR
+
+test "run not-json", () ->
+  expect(1)
   stop()
   $.post("api/run", "garbage")
-  .error(() ->
+  .error () ->
     ok(true)
     start()
-  )
-  .success(() ->
-    ok(false)
+
+test "submit success", () ->
+  expect(1)
+  stop()
+  client.submitCode "main(){}", (result) ->
+    ok(result.success)
     start()
-  )
+
+test "submit with error response", () ->
+  expect(1)
+  client.submitCode$ mock$, "code", (result) ->
+    ok(!result.success)
