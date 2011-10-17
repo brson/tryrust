@@ -1,7 +1,7 @@
 static = require 'node-static'
 http = require 'http'
 
-collect_data = (request, callback) ->
+collectData = (request, callback) ->
   console.log('Collecting data')
   collected = ''
   request.addListener('data', (chunk) ->
@@ -14,7 +14,7 @@ collect_data = (request, callback) ->
 
 handleApi = (request, response) ->
   console.log("Handling an API request")
-  collect_data(request, (reqstr) ->
+  collectData(request, (reqstr) ->
     console.log(reqstr)
 
     runObj = null
