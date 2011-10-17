@@ -26,6 +26,12 @@ handleApi = (request, response) ->
       response.end()
       return
 
+    if !runObj.code?
+      console.log("No code field in request")
+      response.writeHead(400)
+      response.end()
+      return
+
     response.writeHead(200, {'Content-Type': 'text/json'})
     response.end()
   )

@@ -21,6 +21,14 @@ test "run not-json", () ->
     ok(true)
     start()
 
+test "run no-code", () ->
+  expect(1)
+  stop()
+  $.post("api/run", JSON.stringify({nocodehere: "whatever"}))
+  .error () ->
+    ok(true)
+    start()
+
 test "submit success", () ->
   expect(1)
   stop()
@@ -45,3 +53,13 @@ test "submit timeout", () ->
     ok(!result.success)
     ok(result.errmsg == "Request timed out")
     start()
+
+###
+test "run basic", () ->
+  expect(2)
+  stop()
+  client.submitCode 'main(){log "hello";}', (result) ->
+    ok(result.success)
+    ok(result.output.indexOf("hello") != -1)
+    start()
+###
