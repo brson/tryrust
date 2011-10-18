@@ -1,4 +1,4 @@
-timeout = 1000
+timeout = 10000
 
 submitCode = (code, callback) -> submitCode$($, code, callback)
 
@@ -21,12 +21,11 @@ submitCodeTimeout$ = ($, code, timeout, callback) ->
   $.post("api/run", JSON.stringify({
     code: code
   }))
-  .success () ->
+  .success (data) ->
     if !timedout
-      clearTimeout timerId
-      callback({
+      callback
         success: true
-      })
+        output: data.output
   .error () ->
     if !timedout
       clearTimeout timerId

@@ -54,7 +54,6 @@ test "submit timeout", () ->
     ok(result.errmsg == "Request timed out")
     start()
 
-###
 test "run basic", () ->
   expect(2)
   stop()
@@ -62,4 +61,3 @@ test "run basic", () ->
     ok(result.success)
     ok(result.output.indexOf("hello") != -1)
     start()
-###

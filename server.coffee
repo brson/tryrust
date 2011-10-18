@@ -1,5 +1,10 @@
 static = require 'node-static'
 http = require 'http'
+fs = require 'fs'
+
+runCode = (code, callback) ->
+  callback
+    output: "hello"
 
 collectData = (request, callback) ->
   console.log('Collecting data')
@@ -14,7 +19,7 @@ collectData = (request, callback) ->
 
 handleApi = (request, response) ->
   console.log("Handling an API request")
-  collectData(request, (reqstr) ->
+  collectData request, (reqstr) ->
     console.log(reqstr)
 
     runObj = null
@@ -32,9 +37,11 @@ handleApi = (request, response) ->
       response.end()
       return
 
-    response.writeHead(200, {'Content-Type': 'text/json'})
-    response.end()
-  )
+    runCode runObj.code, (result) ->
+      console.log "Returning result"
+      response.writeHead(200, {'Content-Type': 'text/json'})
+      response.write(JSON.stringify(result))
+      response.end()
 
 file = new static.Server './static'
 
