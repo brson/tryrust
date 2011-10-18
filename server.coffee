@@ -3,6 +3,7 @@ http = require 'http'
 fs = require 'fs'
 
 workdir = 'work'
+filemode = 0777
 
 makeFileNames = () ->
   rundir = workdir + '/' + (Math.floor(Math.random() * 0xFFFFFFFF)).toString(16)
@@ -15,21 +16,23 @@ makeFileNames = () ->
 buildWorkdir = (callback) ->
   console.log 'Building work directory'
   # FIXME: What if this fails?
-  fs.mkdir workdir, 0777, () ->
+  fs.mkdir workdir, filemode, () ->
     callback
       success: true
 
 buildRundir = (rundir, callback) ->
   console.log 'Building run directory'
   # FIXME: What if this fails?
-  fs.mkdir rundir, 0777, () ->
+  fs.mkdir rundir, filemode, () ->
     callback
       success: true
 
 writeCode = (code, codefile, callback) ->
-  console.log 'Writing code to file'
-  callback
-    success: true
+  console.log 'Writing code to file ' + codefile
+  fs.writeFile codefile, code, (err) ->
+    # FIXME: err
+    callback
+      success: true
 
 buildCode = (codefile, exefile, callback) ->
   console.log 'Building code'
@@ -43,6 +46,8 @@ runCode = (exefile, callback) ->
     output: "hello"
 
 cleanup = (fileNames) ->
+  fs.unlink fileNames.exefile
+  fs.unlink fileNames.codefile
   fs.rmdir fileNames.rundir
 
 run = (code, callback) ->
