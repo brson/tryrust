@@ -40,6 +40,7 @@ runCode = (exefile, callback) ->
   console.log 'Running code'
   callback
     success: true
+    output: "hello"
 
 cleanup = (fileNames) ->
   fs.rmdir fileNames.rundir
@@ -51,8 +52,7 @@ run = (code, callback) ->
       writeCode code, fileNames.codefile, (result) ->
         buildCode fileNames.codefile, fileNames.exefile, (result) ->
           runCode fileNames.exefile, (result) ->
-            callback
-              output: "hello"
+            callback result
             cleanup(fileNames)
 
 collectData = (request, callback) ->

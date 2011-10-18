@@ -23,9 +23,7 @@ submitCodeTimeout$ = ($, code, timeout, callback) ->
   }))
   .success (data) ->
     if !timedout
-      callback
-        success: true
-        output: data.output
+      callback data
   .error () ->
     if !timedout
       clearTimeout timerId
