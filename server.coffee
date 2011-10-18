@@ -12,16 +12,48 @@ makeFileNames = () ->
     exefile: rundir + '/' + "main"
   }
 
-runCode = (code, callback) ->
+buildWorkdir = (callback) ->
   console.log 'Building work directory'
+  # FIXME: What if this fails?
   fs.mkdir workdir, 0777, () ->
-    console.log 'Building run directory'
+    callback
+      success: true
+
+buildRundir = (rundir, callback) ->
+  console.log 'Building run directory'
+  # FIXME: What if this fails?
+  fs.mkdir rundir, 0777, () ->
+    callback
+      success: true
+
+writeCode = (code, codefile, callback) ->
+  console.log 'Writing code to file'
+  callback
+    success: true
+
+buildCode = (codefile, exefile, callback) ->
+  console.log 'Building code'
+  callback
+    success: true
+
+runCode = (exefile, callback) ->
+  console.log 'Running code'
+  callback
+    success: true
+
+cleanup = (fileNames) ->
+  fs.rmdir fileNames.rundir
+
+run = (code, callback) ->
+  buildWorkdir (result) ->
     fileNames = makeFileNames()
-    fs.mkdir fileNames.rundir, 0777, () ->
-      console.log 'Run directory built'
-      callback
-        output: "hello"
-      fs.rmdir fileNames.rundir
+    buildRundir fileNames.rundir, (result) ->
+      writeCode code, fileNames.codefile, (result) ->
+        buildCode fileNames.codefile, fileNames.exefile, (result) ->
+          runCode fileNames.exefile, (result) ->
+            callback
+              output: "hello"
+            cleanup(fileNames)
 
 collectData = (request, callback) ->
   console.log('Collecting data')
@@ -54,7 +86,7 @@ handleApi = (request, response) ->
       response.end()
       return
 
-    runCode runObj.code, (result) ->
+    run runObj.code, (result) ->
       console.log "Returning result"
       response.writeHead(200, {'Content-Type': 'text/json'})
       response.write(JSON.stringify(result))
