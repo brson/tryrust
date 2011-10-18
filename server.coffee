@@ -2,9 +2,21 @@ static = require 'node-static'
 http = require 'http'
 fs = require 'fs'
 
+workdir = 'work'
+
+makeRundirName = () ->
+  workdir + '/' + (Math.floor(Math.random() * 0xFFFFFFFF)).toString(16)
+
 runCode = (code, callback) ->
-  callback
-    output: "hello"
+  console.log 'Building work directory'
+  fs.mkdir workdir, 0777, () ->
+    console.log 'Building run directory'
+    rundir = makeRundirName()
+    fs.mkdir rundir, 0777, () ->
+      console.log 'Run directory built'
+      callback
+        output: "hello"
+      fs.rmdir rundir
 
 collectData = (request, callback) ->
   console.log('Collecting data')
