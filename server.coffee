@@ -4,19 +4,24 @@ fs = require 'fs'
 
 workdir = 'work'
 
-makeRundirName = () ->
-  workdir + '/' + (Math.floor(Math.random() * 0xFFFFFFFF)).toString(16)
+makeFileNames = () ->
+  rundir = workdir + '/' + (Math.floor(Math.random() * 0xFFFFFFFF)).toString(16)
+  return {
+    rundir: rundir
+    codefile: rundir + '/' + "main.rs"
+    exefile: rundir + '/' + "main"
+  }
 
 runCode = (code, callback) ->
   console.log 'Building work directory'
   fs.mkdir workdir, 0777, () ->
     console.log 'Building run directory'
-    rundir = makeRundirName()
-    fs.mkdir rundir, 0777, () ->
+    fileNames = makeFileNames()
+    fs.mkdir fileNames.rundir, 0777, () ->
       console.log 'Run directory built'
       callback
         output: "hello"
-      fs.rmdir rundir
+      fs.rmdir fileNames.rundir
 
 collectData = (request, callback) ->
   console.log('Collecting data')
