@@ -70,7 +70,8 @@ run = (code, callback) ->
               success: result.success
               compStdOut: compStdOut
               compStdErr: compStdErr
-              output: result.runStdOut
+              runStdOut: result.runStdOut
+              runStdErr: result.runStdErr
             cleanup(fileNames)
 
 collectData = (request, callback) ->

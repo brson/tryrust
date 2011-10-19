@@ -1,5 +1,3 @@
-getCode = () -> "some code"
-
 $(document).ready ->
   client = window.tryRustClient;
 
@@ -13,5 +11,8 @@ $(document).ready ->
     outputArea,
     {theme: theme})
 
-  $("#submit-btn").click(() -> client.submitCode(getCode()))
+  $("#submit-btn").click () ->
+    client.submitCode cmInput.getValue(), (result) ->
+      cmOutput.setValue result.runStdOut
+
 

@@ -59,5 +59,5 @@ test "run basic", () ->
   stop()
   client.submitCode 'fn main(){log_err "hello";}', (result) ->
     ok(result.success)
-    ok(result.output.indexOf("hello") != -1)
+    ok(result.runStdOut.indexOf("hello") != -1)
     start()
