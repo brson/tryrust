@@ -1,15 +1,21 @@
+cmTheme = "default"
+cmMode = "rust"
+
 $(document).ready ->
   client = window.tryRustClient;
 
   inputArea = document.getElementById("inputarea")
   outputArea = document.getElementById("outputarea")
-  theme = "default"
   cmInput = CodeMirror.fromTextArea(
-    inputArea,
-    {theme: theme})
+    inputArea, {
+      mode: "rust"
+      theme: cmTheme
+    })
   cmOutput = CodeMirror.fromTextArea(
-    outputArea,
-    {theme: theme})
+    outputArea, {
+      mode: "none"
+      theme: cmTheme
+    })
 
   $("#submit-btn").click () ->
     client.submitCode cmInput.getValue(), (result) ->
