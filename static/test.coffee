@@ -57,7 +57,7 @@ test "submit timeout", () ->
 test "run basic", () ->
   expect(2)
   stop()
-  client.submitCode 'main(){log "hello";}', (result) ->
+  client.submitCode 'fn main(){log_err "hello";}', (result) ->
     ok(result.success)
     ok(result.output.indexOf("hello") != -1)
     start()

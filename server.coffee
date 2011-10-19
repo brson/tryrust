@@ -1,6 +1,7 @@
 static = require 'node-static'
 http = require 'http'
 fs = require 'fs'
+child_process = require 'child_process'
 
 workdir = 'work'
 filemode = 0777
@@ -36,14 +37,20 @@ writeCode = (code, codefile, callback) ->
 
 buildCode = (codefile, exefile, callback) ->
   console.log 'Building code'
-  callback
-    success: true
+  command = 'rustc ' + codefile + ' -o ' + exefile
+  child_process.exec command, (error, stdout, stderr) ->
+    callback
+      success: true
+      compStdOut: stdout
+      compStdErr: stderr
 
 runCode = (exefile, callback) ->
   console.log 'Running code'
-  callback
-    success: true
-    output: "hello"
+  child_process.exec exefile, (error, stdout, stderr) ->
+    callback
+      success: true
+      runStdOut: stdout
+      runStdErr: stderr
 
 cleanup = (fileNames) ->
   fs.unlink fileNames.exefile
@@ -56,8 +63,14 @@ run = (code, callback) ->
     buildRundir fileNames.rundir, (result) ->
       writeCode code, fileNames.codefile, (result) ->
         buildCode fileNames.codefile, fileNames.exefile, (result) ->
+          compStdOut = result.compStdOut
+          compStdErr = result.compStdErr
           runCode fileNames.exefile, (result) ->
-            callback result
+            callback
+              success: result.success
+              compStdOut: compStdOut
+              compStdErr: compStdErr
+              output: result.runStdOut
             cleanup(fileNames)
 
 collectData = (request, callback) ->
@@ -93,6 +106,7 @@ handleApi = (request, response) ->
 
     run runObj.code, (result) ->
       console.log "Returning result"
+      console.log result
       response.writeHead(200, {'Content-Type': 'text/json'})
       response.write(JSON.stringify(result))
       response.end()
