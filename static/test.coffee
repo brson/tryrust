@@ -32,7 +32,7 @@ test "run no-code", () ->
 test "submit success", () ->
   expect(1)
   stop()
-  client.submitCode "main(){}", (result) ->
+  client.submitCode "fn main(){}", (result) ->
     ok(result.success)
     start()
 
@@ -60,4 +60,12 @@ test "run basic", () ->
   client.submitCode 'fn main(){log_err "hello";}', (result) ->
     ok(result.success)
     ok(result.runStdOut.indexOf("hello") != -1)
+    start()
+
+test "compile fail", () ->
+  expect(2)
+  stop()
+  client.submitCode 'fn main{}', (result) ->
+    ok(!result.success)
+    ok(result.compStdOut.indexOf('expecting') != -1)
     start()

@@ -5,6 +5,7 @@ child_process = require 'child_process'
 
 workdir = 'work'
 filemode = 0777
+rtfailexit = 101
 
 makeFileNames = () ->
   rundir = workdir + '/' + (Math.floor(Math.random() * 0xFFFFFFFF)).toString(16)
@@ -38,11 +39,19 @@ writeCode = (code, codefile, callback) ->
 buildCode = (codefile, exefile, callback) ->
   console.log 'Building code'
   command = 'rustc ' + codefile + ' -o ' + exefile
+  console.log 'Command = ' + command
   child_process.exec command, (error, stdout, stderr) ->
-    callback
-      success: true
-      compStdOut: stdout
-      compStdErr: stderr
+    if error? && error.code == rtfailexit
+      callback
+        success: false
+        errormsg: "Compilation failed"
+        compStdOut: stdout
+        compStdErr: stderr
+    else
+      callback
+        success: true
+        compStdOut: stdout
+        compStdErr: stderr
 
 runCode = (exefile, callback) ->
   console.log 'Running code'
@@ -65,14 +74,18 @@ run = (code, callback) ->
         buildCode fileNames.codefile, fileNames.exefile, (result) ->
           compStdOut = result.compStdOut
           compStdErr = result.compStdErr
-          runCode fileNames.exefile, (result) ->
-            callback
-              success: result.success
-              compStdOut: compStdOut
-              compStdErr: compStdErr
-              runStdOut: result.runStdOut
-              runStdErr: result.runStdErr
-            cleanup(fileNames)
+          if result.success
+            runCode fileNames.exefile, (result) ->
+              callback
+                success: result.success
+                compStdOut: compStdOut
+                compStdErr: compStdErr
+                runStdOut: result.runStdOut
+                runStdErr: result.runStdErr
+              cleanup fileNames
+          else
+            callback result
+            cleanup fileNames
 
 collectData = (request, callback) ->
   console.log('Collecting data')
